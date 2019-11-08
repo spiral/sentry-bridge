@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Sentry\Bootloader;
@@ -42,10 +44,10 @@ final class SentryBootloader extends Bootloader
     /**
      * @param EnvironmentInterface $env
      */
-    public function boot(EnvironmentInterface $env)
+    public function boot(EnvironmentInterface $env): void
     {
         $this->config->setDefaults('sentry', [
-            'dsn' => trim($env->get('SENTRY_DSN', ""), "\n\t\r \"'") // typical typos
+            'dsn' => trim($env->get('SENTRY_DSN', ''), "\n\t\r \"'") // typical typos
         ]);
     }
 

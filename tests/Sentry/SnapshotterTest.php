@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Tests\Sentry;
@@ -18,7 +20,7 @@ use Spiral\Sentry\SentrySnapshotter;
 
 class SnapshotterTest extends TestCase
 {
-    public function testLogger()
+    public function testLogger(): void
     {
         $logger = new TestLogger();
 
@@ -35,7 +37,7 @@ class SnapshotterTest extends TestCase
         $this->assertTrue($logger->hasErrorRecords());
     }
 
-    public function testLoggerWithState()
+    public function testLoggerWithState(): void
     {
         $logger = new TestLogger();
 
@@ -54,5 +56,4 @@ class SnapshotterTest extends TestCase
         $sentry->register(new \Error('hello world'));
         $this->assertTrue($logger->hasErrorRecords());
     }
-
 }
