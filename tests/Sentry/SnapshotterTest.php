@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\Test\TestLogger;
 use Sentry\ClientInterface;
 use Spiral\Debug\State;
+use Spiral\Logger\Event\LogEvent;
 use Spiral\Sentry\SentrySnapshotter;
 
 class SnapshotterTest extends TestCase
@@ -46,6 +47,7 @@ class SnapshotterTest extends TestCase
 
         $state = new State();
         $state->setTag('test', 'tag');
+        $state->addLogEvent(new LogEvent(new \DateTime(), 'default', 'error', 'hello world'));
 
         $sentry = new SentrySnapshotter(
             $client,
