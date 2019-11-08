@@ -48,6 +48,9 @@ class SnapshotterTest extends TestCase
         $state = new State();
         $state->setTag('test', 'tag');
         $state->addLogEvent(new LogEvent(new \DateTime(), 'default', 'error', 'hello world'));
+        $state->addLogEvent(new LogEvent(new \DateTime(), 'default', 'info', 'hello world'));
+        $state->addLogEvent(new LogEvent(new \DateTime(), 'default', 'alert', 'hello world'));
+        $state->addLogEvent(new LogEvent(new \DateTime(), 'default', 'warning', 'hello world'));
 
         $sentry = new SentrySnapshotter(
             $client,
