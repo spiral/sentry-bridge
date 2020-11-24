@@ -50,6 +50,6 @@ class BootloaderTest extends TestCase
         $this->assertInstanceOf(Client::class, $client);
 
         /** @var Client $client */
-        $this->assertSame('https://sentry.demo', $client->getOptions()->getDsn());
+        $this->assertSame('https://key@sentry.demo/2', (string)$client->getOptions()->getDsn());
     }
 }
