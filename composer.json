@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "php": "^7.2",
+    "php": ">=7.2",
     "spiral/boot": "^1.2",
     "sentry/sdk": "^3.0",
     "spiral/snapshots": "^1.0"
