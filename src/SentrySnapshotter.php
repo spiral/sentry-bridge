@@ -50,15 +50,9 @@ final class SentrySnapshotter implements SnapshotterInterface
      */
     public function register(\Throwable $e): SnapshotInterface
     {
-        $snapshot = new Snapshot($this->getID($e), $e);
-
-        if ($this->logger !== null) {
-            $this->logger->error($snapshot->getMessage());
-        }
-
         $scope = new Scope();
 
-        if ($this->state !== null) {
+        if (null !== $this->state) {
             $scope->setTags($this->state->getTags());
             $scope->setExtras($this->state->getVariables());
 
@@ -67,7 +61,15 @@ final class SentrySnapshotter implements SnapshotterInterface
             }
         }
 
-        $this->client->captureException($snapshot->getException(), $scope);
+        $eventId = $this->client->captureException($e, $scope);
+        $snapshot = new Snapshot(
+            $eventId ? (string) $eventId : $this->getID($e),
+            $e
+        );
+
+        if (null !== $this->logger) {
+            $this->logger->error($snapshot->getMessage());
+        }
 
         return $snapshot;
     }
