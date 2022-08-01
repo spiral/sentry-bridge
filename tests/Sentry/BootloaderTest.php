@@ -15,7 +15,8 @@ use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Sentry\Client;
 use Sentry\ClientInterface;
-use Spiral\Boot\BootloadManager;
+use Spiral\Boot\BootloadManager\BootloadManager;
+use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Boot\Environment;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
@@ -39,7 +40,7 @@ class BootloaderTest extends TestCase
             'dsn' => 'test'
         ]);
 
-        (new BootloadManager($c))->bootload([SentryBootloader::class]);
+        (new BootloadManager($c, new Initializer($c)))->bootload([SentryBootloader::class]);
 
         $c->bind(SentryConfig::class, new SentryConfig([
             'dsn' => 'https://key@sentry.demo/2'
