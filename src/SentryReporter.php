@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Exceptions\Reporter;
+namespace Spiral\Sentry;
 
 use Spiral\Exceptions\ExceptionReporterInterface;
-use Spiral\Sentry\Client;
 
 final class SentryReporter implements ExceptionReporterInterface
 {

@@ -4,41 +4,12 @@ declare(strict_types=1);
 
 namespace Spiral\Sentry\Bootloader;
 
-use Sentry\ClientBuilder;
-use Sentry\ClientInterface;
-use Spiral\Boot\Bootloader\Bootloader;
-use Spiral\Boot\EnvironmentInterface;
-use Spiral\Config\ConfiguratorInterface;
-use Spiral\Sentry\Config\SentryConfig;
 use Spiral\Sentry\SentrySnapshotter;
 use Spiral\Snapshots\SnapshotterInterface;
 
-final class SentryBootloader extends Bootloader
+final class SentryBootloader extends AbstractBootloader
 {
-    protected const SINGLETONS = [
-        ClientInterface::class => [self::class, 'client'],
-    ];
-
     protected const BINDINGS = [
         SnapshotterInterface::class => SentrySnapshotter::class
     ];
-
-    public function __construct(
-        private readonly ConfiguratorInterface $config
-    ) {
-    }
-
-    public function init(EnvironmentInterface $env): void
-    {
-        $this->config->setDefaults('sentry', [
-            'dsn' => trim($env->get('SENTRY_DSN', ''), "\n\t\r \"'") // typical typos
-        ]);
-    }
-
-    private function client(SentryConfig $config): ClientInterface
-    {
-        return ClientBuilder::create([
-            'dsn' => $config->getDSN()
-        ])->getClient();
-    }
 }
