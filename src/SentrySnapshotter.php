@@ -15,20 +15,20 @@ final class SentrySnapshotter implements SnapshotterInterface
     ) {
     }
 
-    public function register(\Throwable $exception): SnapshotInterface
+    public function register(\Throwable $e): SnapshotInterface
     {
-        $eventId = $this->client->send($exception);
+        $eventId = $this->client->send($e);
 
         $snapshot = new Snapshot(
-            $eventId ? (string) $eventId : $this->getID($exception),
-            $exception
+            $eventId ? (string) $eventId : $this->getID($e),
+            $e
         );
 
         return $snapshot;
     }
 
-    protected function getID(\Throwable $exception): string
+    protected function getID(\Throwable $e): string
     {
-        return \md5(\implode('|', [$exception->getMessage(), $exception->getFile(), $exception->getLine()]));
+        return \md5(\implode('|', [$e->getMessage(), $e->getFile(), $e->getLine()]));
     }
 }

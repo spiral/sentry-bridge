@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Sentry;
@@ -40,7 +33,7 @@ class BootloaderTest extends TestCase
             'dsn' => 'test'
         ]);
 
-        (new BootloadManager($c, new Initializer($c)))->bootload([SentryBootloader::class]);
+        (new BootloadManager($c, $c, $c, new Initializer($c, $c)))->bootload([SentryBootloader::class]);
 
         $c->bind(SentryConfig::class, new SentryConfig([
             'dsn' => 'https://key@sentry.demo/2'
