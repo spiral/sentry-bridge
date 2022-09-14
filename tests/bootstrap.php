@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Spiral Framework, SpiralScout LLC.
- *
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 error_reporting(E_ALL | E_STRICT);
