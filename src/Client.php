@@ -21,6 +21,9 @@ final class Client
     ) {
     }
 
+    /**
+     * @psalm-suppress PossiblyNullReference
+     */
     public function send(\Throwable $exception): ?EventId
     {
         $state = $this->container->get(StateInterface::class);
