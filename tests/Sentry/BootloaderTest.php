@@ -7,7 +7,7 @@ namespace Spiral\Tests\Sentry;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Sentry\Client;
-use Sentry\State\HubInterface;
+use Sentry\ClientInterface;
 use Spiral\Boot\BootloadManager\BootloadManager;
 use Spiral\Boot\BootloadManager\Initializer;
 use Spiral\Boot\Environment;
@@ -39,9 +39,7 @@ class BootloaderTest extends TestCase
             'dsn' => 'https://key@sentry.demo/2'
         ]));
 
-        $hub = $c->get(HubInterface::class);
-
-        $client = $hub->getClient();
+        $client = $c->get(ClientInterface::class);
 
         $this->assertInstanceOf(Client::class, $client);
 

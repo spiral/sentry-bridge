@@ -7,8 +7,8 @@ namespace Spiral\Sentry;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LogLevel;
 use Sentry\Breadcrumb;
+use Sentry\ClientInterface;
 use Sentry\EventId;
-use Sentry\State\HubInterface;
 use Sentry\State\Scope;
 use Spiral\Debug\StateInterface;
 use Spiral\Logger\Event\LogEvent;
@@ -16,14 +16,11 @@ use Spiral\Logger\Event\LogEvent;
 final class Client
 {
     public function __construct(
-        private readonly HubInterface $hub,
+        private readonly ClientInterface $client,
         private readonly ContainerInterface $container,
     ) {
     }
 
-    /**
-     * @psalm-suppress PossiblyNullReference
-     */
     public function send(\Throwable $exception): ?EventId
     {
         $state = $this->container->get(StateInterface::class);
@@ -39,7 +36,7 @@ final class Client
             }
         }
 
-        return $this->hub->getClient()->captureException($exception, $scope);
+        return $this->client->captureException($exception, $scope);
     }
 
     private function makeBreadcrumb(LogEvent $event): Breadcrumb

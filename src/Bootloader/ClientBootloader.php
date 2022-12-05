@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Spiral\Sentry\Bootloader;
 
 use Sentry\ClientBuilder;
+use Sentry\ClientInterface;
 use Sentry\SentrySdk;
 use Sentry\State\Hub;
-use Sentry\State\HubInterface;
 use Spiral\Boot\Bootloader\Bootloader;
 use Spiral\Boot\EnvironmentInterface;
 use Spiral\Config\ConfiguratorInterface;
@@ -17,7 +17,7 @@ use Spiral\Sentry\Version;
 class ClientBootloader extends Bootloader
 {
     protected const SINGLETONS = [
-        HubInterface::class => [self::class, 'hub'],
+        ClientInterface::class => [self::class, 'createClient'],
     ];
 
     public function __construct(
@@ -32,19 +32,19 @@ class ClientBootloader extends Bootloader
         ]);
     }
 
-    private function hub(SentryConfig $config): HubInterface
+    private function createClient(SentryConfig $config): ClientInterface
     {
         $builder = ClientBuilder::create([
-            'dsn' => $config->getDSN()
+            'dsn' => $config->getDSN(),
         ]);
 
         $builder->setSdkIdentifier(Version::SDK_IDENTIFIER);
         $builder->setSdkVersion(Version::SDK_VERSION);
 
-        $hub = new Hub($builder->getClient());
+        $client = $builder->getClient();
 
-        SentrySdk::setCurrentHub($hub);
+        SentrySdk::setCurrentHub(new Hub($client));
 
-        return $hub;
+        return $client;
     }
 }
