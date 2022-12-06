@@ -7,7 +7,7 @@ namespace Spiral\Tests\Sentry;
 use PHPUnit\Framework\TestCase;
 use Spiral\Sentry\Config\SentryConfig;
 
-class ConfigTest extends TestCase
+final class ConfigTest extends TestCase
 {
     public function testConfig(): void
     {
