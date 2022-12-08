@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Spiral\Sentry;
 
+use Psr\Container\ContainerInterface;
 use Psr\Log\LogLevel;
 use Sentry\Breadcrumb;
 use Sentry\ClientInterface;
@@ -16,19 +17,21 @@ final class Client
 {
     public function __construct(
         private readonly ClientInterface $client,
-        private readonly ?StateInterface $state = null
+        private readonly ContainerInterface $container,
     ) {
     }
 
     public function send(\Throwable $exception): ?EventId
     {
+        $state = $this->container->get(StateInterface::class);
+
         $scope = new Scope();
 
-        if (null !== $this->state) {
-            $scope->setTags($this->state->getTags());
-            $scope->setExtras($this->state->getVariables());
+        if ($state !== null) {
+            $scope->setTags($state->getTags());
+            $scope->setExtras($state->getVariables());
 
-            foreach ($this->state->getLogEvents() as $event) {
+            foreach ($state->getLogEvents() as $event) {
                 $scope->addBreadcrumb($this->makeBreadcrumb($event));
             }
         }
