@@ -23,11 +23,11 @@ final class Client
 
     public function send(\Throwable $exception): ?EventId
     {
-        $state = $this->container->get(StateInterface::class);
-
         $scope = new Scope();
 
-        if ($state !== null) {
+        if ($this->container->has(StateInterface::class)) {
+            $state = $this->container->get(StateInterface::class);
+
             $scope->setTags($state->getTags());
             $scope->setExtras($state->getVariables());
 

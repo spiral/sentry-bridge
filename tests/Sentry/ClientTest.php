@@ -36,4 +36,25 @@ final class ClientTest extends TestCase
 
         $this->assertSame($eventId, $mainClient->send($errorException));
     }
+
+    public function testSendWithoutState(): void
+    {
+        $mainClient = new Client(
+            $client = m::mock(ClientInterface::class),
+            new Container()
+        );
+
+        $errorException = new \ErrorException('Test exception');
+
+        $client->shouldReceive('captureException')
+            ->once()
+            ->withArgs(function (\Throwable $exception) use ($errorException) {
+                return $errorException === $exception;
+            })
+            ->andReturn(
+                $eventId = new EventId('c8c46e00bf53942206fd2ad9546daac2')
+            );
+
+        $this->assertSame($eventId, $mainClient->send($errorException));
+    }
 }
