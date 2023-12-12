@@ -34,13 +34,21 @@ class ClientBootloader extends Bootloader
 
     private function createClient(SentryConfig $config): ClientInterface
     {
+        /**
+         * @psalm-suppress InternalClass
+         * @psalm-suppress InternalMethod
+         */
         $builder = ClientBuilder::create([
             'dsn' => $config->getDSN(),
         ]);
 
+        /** @psalm-suppress InternalMethod */
         $builder->setSdkIdentifier(Version::SDK_IDENTIFIER);
+
+        /** @psalm-suppress InternalMethod */
         $builder->setSdkVersion(Version::SDK_VERSION);
 
+        /** @psalm-suppress InternalMethod */
         $client = $builder->getClient();
 
         SentrySdk::setCurrentHub(new Hub($client));

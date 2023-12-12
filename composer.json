@@ -13,14 +13,13 @@
     "php": ">=8.1",
     "spiral/boot": "^3.0",
     "spiral/snapshots": "^3.0",
-    "sentry/sentry": "^3.1",
-    "php-http/curl-client": "^2.2",
-    "symfony/options-resolver": "^4.4.30|^5.0.11|^6.0"
+    "sentry/sentry": "^4.0",
+    "php-http/curl-client": "^2.3.1"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5.5",
     "mockery/mockery": "^1.5",
-    "vimeo/psalm": "^5.1",
+    "vimeo/psalm": "^5.17",
     "psr/log": "^3.0",
     "spiral/testing": "^2.2"
   },
