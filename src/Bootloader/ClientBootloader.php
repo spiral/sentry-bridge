@@ -146,7 +146,7 @@ class ClientBootloader extends Bootloader
 
         SentrySdk::setCurrentHub($hub);
 
-        $finalizer->finalize(static function () use ($hub): void {
+        $finalizer->addFinalizer(static function () use ($hub): void {
             $hub->configureScope(function (Scope $scope): void {
                 $scope->removeUser();
             });
