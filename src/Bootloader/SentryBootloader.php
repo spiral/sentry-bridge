@@ -10,11 +10,17 @@ use Spiral\Snapshots\SnapshotterInterface;
 
 final class SentryBootloader extends Bootloader
 {
-    protected const DEPENDENCIES = [
-        ClientBootloader::class,
-    ];
+    public function defineDependencies(): array
+    {
+        return [
+            ClientBootloader::class,
+        ];
+    }
 
-    protected const BINDINGS = [
-        SnapshotterInterface::class => SentrySnapshotter::class,
-    ];
+    public function defineBindings(): array
+    {
+        return [
+            SnapshotterInterface::class => SentrySnapshotter::class,
+        ];
+    }
 }
