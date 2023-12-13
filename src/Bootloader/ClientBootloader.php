@@ -6,6 +6,7 @@ namespace Spiral\Sentry\Bootloader;
 
 use Sentry\ClientBuilder;
 use Sentry\ClientInterface;
+use Sentry\Integration\RequestFetcherInterface;
 use Sentry\Options;
 use Sentry\SentrySdk;
 use Sentry\State\Hub;
@@ -34,6 +35,7 @@ class ClientBootloader extends Bootloader
             Options::class => [self::class, 'createOptions'],
             HubInterface::class => [Hub::class, 'createHub'],
             ClientInterface::class => [self::class, 'getClient'],
+            RequestFetcherInterface::class => RequestScope::class,
         ];
     }
 
@@ -57,7 +59,7 @@ class ClientBootloader extends Bootloader
         SentryConfig $config,
         DirectoriesInterface $dirs,
         EnvironmentInterface $env,
-        RequestScope $requestScope,
+        RequestFetcherInterface $requestScope,
     ): Options {
         $options = new Options([
             'dsn' => $config->getDSN(),
