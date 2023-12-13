@@ -33,7 +33,7 @@ class ClientBootloader extends Bootloader
     {
         return [
             Options::class => [self::class, 'createOptions'],
-            HubInterface::class => [Hub::class, 'createHub'],
+            HubInterface::class => [self::class, 'createHub'],
             ClientInterface::class => [self::class, 'getClient'],
             RequestFetcherInterface::class => RequestScope::class,
         ];
