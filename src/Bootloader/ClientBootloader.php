@@ -24,6 +24,9 @@ use Sentry\Integration as SdkIntegration;
 
 class ClientBootloader extends Bootloader
 {
+    /** @var SdkIntegration\IntegrationInterface[] */
+    private array $integrations = [];
+
     public function __construct(
         private readonly ConfiguratorInterface $config,
     ) {
@@ -39,6 +42,14 @@ class ClientBootloader extends Bootloader
         ];
     }
 
+    /**
+     * Register a new integration to be added to the Sentry SDK.
+     */
+    public function addIntegration(SdkIntegration\IntegrationInterface $integration): void
+    {
+        $this->integrations[] = $integration;
+    }
+
     public function init(EnvironmentInterface $env, FinalizerInterface $finalizer): void
     {
         $this->config->setDefaults('sentry', [
@@ -48,13 +59,16 @@ class ClientBootloader extends Bootloader
             'sample_rate' => $env->get('SENTRY_SAMPLE_RATE') === null
                 ? 1.0
                 : (float)$env->get('SENTRY_SAMPLE_RATE'),
-            'traces_sample_rate' => $env->get('SENTRY_PROFILES_SAMPLE_RATE') === null
+            'traces_sample_rate' => $env->get('SENTRY_TRACES_SAMPLE_RATE') === null
                 ? null
-                : (float)$env->get('SENTRY_PROFILES_SAMPLE_RATE'),
+                : (float)$env->get('SENTRY_TRACES_SAMPLE_RATE'),
             'send_default_pii' => (bool)$env->get('SENTRY_SEND_DEFAULT_PII'),
         ]);
     }
 
+    /**
+     * Create the Sentry SDK options.
+     */
     private function createOptions(
         SentryConfig $config,
         DirectoriesInterface $dirs,
@@ -121,7 +135,7 @@ class ClientBootloader extends Bootloader
                 $integrations[] = new SdkIntegration\RequestIntegration($requestScope);
             }
 
-            return $integrations;
+            return [...$integrations, ...$this->integrations];
         });
 
         return $options;
@@ -148,14 +162,14 @@ class ClientBootloader extends Bootloader
 
         $finalizer->addFinalizer(static function () use ($hub): void {
             $hub->configureScope(function (Scope $scope): void {
-                $scope->removeUser();
+                $scope->clear();
             });
         });
 
         return $hub;
     }
 
-    private function getClient(HubInterface $hub): ClientInterface
+    private function getClient(HubInterface $hub): ?ClientInterface
     {
         return $hub->getClient();
     }

@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Spiral\Tests\Sentry;
 
 use Mockery as m;
-use Psr\Container\ContainerInterface;
-use Sentry\ClientInterface;
+use Sentry\State\HubInterface;
 use Spiral\Core\Container;
 use Spiral\Debug\State;
 use Spiral\Debug\StateInterface;
@@ -19,13 +18,15 @@ final class SentrySnapshotterTest extends TestCase
 {
     public function testRegister(): void
     {
-        $client = m::mock(ClientInterface::class);
-        $client->expects('captureException');
+        $hub = m::mock(HubInterface::class);
+
+        $hub->expects('configureScope');
+        $hub->expects('captureException');
 
         $container = new Container();
         $container->bindSingleton(StateInterface::class, new State());
 
-        $sentry = new SentrySnapshotter(new Client($client, $container));
+        $sentry = new SentrySnapshotter(new Client($hub, $container));
 
         $this->assertInstanceOf(SnapshotInterface::class, $sentry->register(new \Error('hello world')));
     }

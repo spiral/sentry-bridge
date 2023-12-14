@@ -11,7 +11,7 @@ use Spiral\Snapshots\SnapshotterInterface;
 final class SentrySnapshotter implements SnapshotterInterface
 {
     public function __construct(
-        private readonly Client $client
+        private readonly Client $client,
     ) {
     }
 
@@ -19,12 +19,10 @@ final class SentrySnapshotter implements SnapshotterInterface
     {
         $eventId = $this->client->send($e);
 
-        $snapshot = new Snapshot(
-            $eventId ? (string) $eventId : $this->getID($e),
-            $e
+        return new Snapshot(
+            $eventId ? (string)$eventId : $this->getID($e),
+            $e,
         );
-
-        return $snapshot;
     }
 
     protected function getID(\Throwable $e): string

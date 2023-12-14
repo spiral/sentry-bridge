@@ -2,8 +2,8 @@
 
 namespace Spiral\Tests\Sentry;
 
+use Sentry\State\HubInterface;
 use Spiral\Tests\TestCase;
-use Sentry\ClientInterface;
 use Sentry\EventId;
 use Spiral\Core\Container;
 use Spiral\Debug\State;
@@ -19,19 +19,22 @@ final class ClientTest extends TestCase
         $container->bindSingleton(StateInterface::class, new State());
 
         $mainClient = new Client(
-            $client = m::mock(ClientInterface::class),
-            $container
+            $client = m::mock(HubInterface::class),
+            $container,
         );
 
         $errorException = new \ErrorException('Test exception');
 
+        $client->shouldReceive('configureScope')->once();
+
         $client->shouldReceive('captureException')
             ->once()
             ->withArgs(function (\Throwable $exception) use ($errorException) {
-                return $errorException === $exception;
+                $this->assertSame($errorException, $exception);
+                return true;
             })
             ->andReturn(
-                $eventId = new EventId('c8c46e00bf53942206fd2ad9546daac2')
+                $eventId = new EventId('c8c46e00bf53942206fd2ad9546daac2'),
             );
 
         $this->assertSame($eventId, $mainClient->send($errorException));
@@ -40,8 +43,8 @@ final class ClientTest extends TestCase
     public function testSendWithoutState(): void
     {
         $mainClient = new Client(
-            $client = m::mock(ClientInterface::class),
-            new Container()
+            $client = m::mock(HubInterface::class),
+            new Container(),
         );
 
         $errorException = new \ErrorException('Test exception');
@@ -49,10 +52,11 @@ final class ClientTest extends TestCase
         $client->shouldReceive('captureException')
             ->once()
             ->withArgs(function (\Throwable $exception) use ($errorException) {
-                return $errorException === $exception;
+                $this->assertSame($errorException, $exception);
+                return true;
             })
             ->andReturn(
-                $eventId = new EventId('c8c46e00bf53942206fd2ad9546daac2')
+                $eventId = new EventId('c8c46e00bf53942206fd2ad9546daac2'),
             );
 
         $this->assertSame($eventId, $mainClient->send($errorException));

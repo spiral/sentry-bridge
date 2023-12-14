@@ -19,8 +19,6 @@
     "php-http/curl-client": "^2.3.1"
   },
   "require-dev": {
-    "phpunit/phpunit": "^9.5.5",
-    "mockery/mockery": "^1.5",
     "vimeo/psalm": "^5.17",
     "psr/log": "^3.0",
     "spiral/testing": "^2.2"
