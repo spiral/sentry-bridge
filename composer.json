@@ -21,7 +21,7 @@
   "require-dev": {
     "vimeo/psalm": "^5.17",
     "psr/log": "^3.0",
-    "spiral/testing": "^2.2"
+    "spiral/testing": "^2.6"
   },
   "autoload": {
     "psr-4": {
