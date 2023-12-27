@@ -7,8 +7,8 @@ namespace Spiral\Sentry;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LogLevel;
 use Sentry\Breadcrumb;
-use Sentry\ClientInterface;
 use Sentry\EventId;
+use Sentry\State\HubInterface;
 use Sentry\State\Scope;
 use Spiral\Debug\StateInterface;
 use Spiral\Logger\Event\LogEvent;
@@ -16,27 +16,27 @@ use Spiral\Logger\Event\LogEvent;
 final class Client
 {
     public function __construct(
-        private readonly ClientInterface $client,
+        private readonly HubInterface $hub,
         private readonly ContainerInterface $container,
     ) {
     }
 
     public function send(\Throwable $exception): ?EventId
     {
-        $scope = new Scope();
-
         if ($this->container->has(StateInterface::class)) {
             $state = $this->container->get(StateInterface::class);
 
-            $scope->setTags($state->getTags());
-            $scope->setExtras($state->getVariables());
+            $this->hub->configureScope(function (Scope $scope) use ($state): void {
+                $scope->setTags($state->getTags());
+                $scope->setExtras($state->getVariables());
 
-            foreach ($state->getLogEvents() as $event) {
-                $scope->addBreadcrumb($this->makeBreadcrumb($event));
-            }
+                foreach ($state->getLogEvents() as $event) {
+                    $scope->addBreadcrumb($this->makeBreadcrumb($event));
+                }
+            });
         }
 
-        return $this->client->captureException($exception, $scope);
+        return $this->hub->captureException($exception);
     }
 
     private function makeBreadcrumb(LogEvent $event): Breadcrumb
@@ -68,7 +68,7 @@ final class Client
             'default',
             $event->getChannel(),
             $event->getMessage(),
-            $event->getContext()
+            $event->getContext(),
         );
     }
 }

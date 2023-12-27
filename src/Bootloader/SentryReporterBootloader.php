@@ -11,9 +11,12 @@ use Spiral\Sentry\SentryReporter;
 
 final class SentryReporterBootloader extends Bootloader
 {
-    protected const DEPENDENCIES = [
-        ClientBootloader::class,
-    ];
+    public function defineDependencies(): array
+    {
+        return [
+            ClientBootloader::class,
+        ];
+    }
 
     public function init(AbstractKernel $kernel): void
     {
