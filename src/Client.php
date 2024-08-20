@@ -10,6 +10,7 @@ use Sentry\Breadcrumb;
 use Sentry\EventId;
 use Sentry\State\HubInterface;
 use Sentry\State\Scope;
+use Spiral\Core\Attribute\Proxy;
 use Spiral\Debug\StateInterface;
 use Spiral\Logger\Event\LogEvent;
 
@@ -17,13 +18,14 @@ final class Client
 {
     public function __construct(
         private readonly HubInterface $hub,
-        private readonly ContainerInterface $container,
+        #[Proxy] private readonly ContainerInterface $container,
     ) {
     }
 
     public function send(\Throwable $exception): ?EventId
     {
-        if ($this->container->has(StateInterface::class)) {
+        try {
+            /** @var StateInterface $state */
             $state = $this->container->get(StateInterface::class);
 
             $this->hub->configureScope(function (Scope $scope) use ($state): void {
@@ -34,6 +36,8 @@ final class Client
                     $scope->addBreadcrumb($this->makeBreadcrumb($event));
                 }
             });
+        } catch (\Throwable) {
+            // Do nothing
         }
 
         return $this->hub->captureException($exception);

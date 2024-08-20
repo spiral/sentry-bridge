@@ -8,23 +8,11 @@
     </MixedArgument>
   </file>
   <file src="src/Client.php">
-    <MixedArgument>
-      <code><![CDATA[$event]]></code>
-      <code><![CDATA[$state->getTags()]]></code>
-      <code><![CDATA[$state->getVariables()]]></code>
-    </MixedArgument>
     <MixedArgumentTypeCoercion>
       <code><![CDATA[$event->getContext()]]></code>
+      <code><![CDATA[$state->getTags()]]></code>
+      <code><![CDATA[$state->getVariables()]]></code>
     </MixedArgumentTypeCoercion>
-    <MixedAssignment>
-      <code><![CDATA[$event]]></code>
-      <code><![CDATA[$state]]></code>
-    </MixedAssignment>
-    <MixedMethodCall>
-      <code><![CDATA[getLogEvents]]></code>
-      <code><![CDATA[getTags]]></code>
-      <code><![CDATA[getVariables]]></code>
-    </MixedMethodCall>
   </file>
   <file src="src/Config/SentryConfig.php">
     <MixedInferredReturnType>
