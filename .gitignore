@@ -1,6 +1,7 @@
 .idea/
 .env
 composer.lock
-vendor/
+/runtime/
+/vendor/
 *.db
 clover.xml
