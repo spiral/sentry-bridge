@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="5.25.0@01a8eb06b9e9cc6cfb6a320bf9fb14331919d505">
+  <file src="src/Bootloader/ClientBootloader.php">
+    <MixedArgument>
+      <code><![CDATA[$env->get('APP_ENV')]]></code>
+      <code><![CDATA[$env->get('APP_VERSION')]]></code>
+      <code><![CDATA[$env->get('SENTRY_DSN', '')]]></code>
+    </MixedArgument>
+  </file>
+  <file src="src/Client.php">
+    <MixedArgument>
+      <code><![CDATA[$event]]></code>
+      <code><![CDATA[$state->getTags()]]></code>
+      <code><![CDATA[$state->getVariables()]]></code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion>
+      <code><![CDATA[$event->getContext()]]></code>
+    </MixedArgumentTypeCoercion>
+    <MixedAssignment>
+      <code><![CDATA[$event]]></code>
+      <code><![CDATA[$state]]></code>
+    </MixedAssignment>
+    <MixedMethodCall>
+      <code><![CDATA[getLogEvents]]></code>
+      <code><![CDATA[getTags]]></code>
+      <code><![CDATA[getVariables]]></code>
+    </MixedMethodCall>
+  </file>
+  <file src="src/Config/SentryConfig.php">
+    <MixedInferredReturnType>
+      <code><![CDATA[?float]]></code>
+      <code><![CDATA[?string]]></code>
+      <code><![CDATA[?string]]></code>
+      <code><![CDATA[bool]]></code>
+      <code><![CDATA[float]]></code>
+      <code><![CDATA[string]]></code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->config['dsn']]]></code>
+      <code><![CDATA[$this->config['environment'] ?? $_SERVER['SENTRY_ENVIRONMENT'] ?? null]]></code>
+      <code><![CDATA[$this->config['environment'] ?? $_SERVER['SENTRY_ENVIRONMENT'] ?? null]]></code>
+      <code><![CDATA[$this->config['release'] ?? $_SERVER['SENTRY_RELEASE'] ?? null]]></code>
+      <code><![CDATA[$this->config['release'] ?? $_SERVER['SENTRY_RELEASE'] ?? null]]></code>
+      <code><![CDATA[$this->config['sample_rate']]]></code>
+      <code><![CDATA[$this->config['send_default_pii'] ?? false]]></code>
+      <code><![CDATA[$this->config['send_default_pii'] ?? false]]></code>
+      <code><![CDATA[$this->config['traces_sample_rate']]]></code>
+    </MixedReturnStatement>
+  </file>
+  <file src="src/Http/RequestScope.php">
+    <MixedInferredReturnType>
+      <code><![CDATA[?ServerRequestInterface]]></code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement>
+      <code><![CDATA[$this->container->get(ServerRequestInterface::class)]]></code>
+    </MixedReturnStatement>
+  </file>
+</files>

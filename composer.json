@@ -1,43 +1,80 @@
 {
-  "name": "spiral/sentry-bridge",
-  "type": "library",
-  "description": "Sentry Exception Handler for Spiral",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Anton Titov / Wolfy-J",
-      "email": "wolfy.jd@gmail.com"
+    "name": "spiral/sentry-bridge",
+    "type": "library",
+    "description": "Sentry Exception Handler for Spiral",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/spiral/grpc-client/issues",
+        "source": "https://github.com/spiral/grpc-client",
+        "docs": "https://spiral.dev/docs",
+        "chat": "https://discord.gg/V6EK4he"
+    },
+    "authors": [
+        {
+            "name": "Anton Titov (wolfy-j)",
+            "email": "wolfy-j@spiralscout.com"
+        },
+        {
+            "name": "Pavel Butchnev (butschster)",
+            "email": "pavel.buchnev@spiralscout.com"
+        },
+        {
+            "name": "Aleksei Gagarin (roxblnfk)",
+            "email": "alexey.gagarin@spiralscout.com"
+        },
+        {
+            "name": "Maksim Smakouz (msmakouz)",
+            "email": "maksim.smakouz@spiralscout.com"
+        }
+    ],
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/spiral"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "spiral/boot": "^3.0",
+        "spiral/snapshots": "^3.0",
+        "sentry/sentry": "^4.0",
+        "psr/http-factory": "^1.0.1",
+        "psr/http-message": "^1.0.1 || ^2.0",
+        "php-http/curl-client": "^2.3.1"
+    },
+    "require-dev": {
+        "vimeo/psalm": "^5.25",
+        "psr/log": "^3.0",
+        "spiral/testing": "^2.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spiral\\Sentry\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spiral\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    },
+    "scripts": {
+        "psalm": "psalm",
+        "psalm:baseline": "psalm --set-baseline=psalm-baseline.xml",
+        "psalm:ci": "psalm --output-format=github --shepherd --show-info=false --stats --threads=4",
+        "test": [
+            "@putenv XDEBUG_MODE=coverage",
+            "phpunit --color=always"
+        ],
+        "test:cc": [
+            "@putenv XDEBUG_MODE=coverage",
+            "phpunit --coverage-clover=runtime/phpunit/logs/clover.xml --color=always"
+        ]
     }
-  ],
-  "require": {
-    "php": ">=8.1",
-    "spiral/boot": "^3.0",
-    "spiral/snapshots": "^3.0",
-    "sentry/sentry": "^4.0",
-    "psr/http-factory": "^1.0.1",
-    "psr/http-message": "^1.0.1 || ^2.0",
-    "php-http/curl-client": "^2.3.1"
-  },
-  "require-dev": {
-    "vimeo/psalm": "^5.17",
-    "psr/log": "^3.0",
-    "spiral/testing": "^2.6"
-  },
-  "autoload": {
-    "psr-4": {
-      "Spiral\\Sentry\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Spiral\\Tests\\": "tests/"
-    }
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "config": {
-    "allow-plugins": {
-      "php-http/discovery": true
-    }
-  }
 }

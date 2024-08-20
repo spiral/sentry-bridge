@@ -1,1 +1,15 @@
-/tests export-ignore
+* text=auto
+
+.github                export-ignore
+tests                  export-ignore
+.*                     export-ignore
+composer.lock          export-ignore
+composer-require-*     export-ignore
+Makefile               export-ignore
+phpunit.xml*           export-ignore
+pest.xml*              export-ignore
+psalm.*                export-ignore
+psalm-baseline.xml     export-ignore
+dload.xml              export-ignore
+infection.*            export-ignore
+codecov.*              export-ignore
