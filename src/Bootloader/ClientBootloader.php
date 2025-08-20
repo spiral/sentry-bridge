@@ -63,6 +63,7 @@ class ClientBootloader extends Bootloader
                 ? null
                 : (float)$env->get('SENTRY_TRACES_SAMPLE_RATE'),
             'send_default_pii' => (bool)$env->get('SENTRY_SEND_DEFAULT_PII'),
+            'ignore_exceptions' => [],
         ]);
     }
 
@@ -84,6 +85,7 @@ class ClientBootloader extends Bootloader
         $options->setSampleRate($config->getSampleRate());
         $options->setTracesSampleRate($config->getTracesSampleRate());
         $options->setSendDefaultPii($config->isSendDefaultPii());
+        $options->setIgnoreExceptions($config->getIgnoreExceptions());
 
         $options->setPrefixes([
             $dirs->get('root'),

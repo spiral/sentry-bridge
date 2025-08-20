@@ -8,6 +8,7 @@ use Sentry\Integration\RequestFetcherInterface;
 use Sentry\Options;
 use Sentry\State\Hub;
 use Sentry\State\HubInterface;
+use Spiral\Http\Exception\ClientException;
 use Spiral\Sentry\Config\SentryConfig;
 use Spiral\Sentry\Http\RequestScope;
 use Spiral\Testing\Attribute\Env;
@@ -45,6 +46,7 @@ final class ClientBootloaderTest extends TestCase
         $this->assertSame(1.0, $config['sample_rate']);
         $this->assertSame(null, $config['traces_sample_rate']);
         $this->assertFalse($config['send_default_pii']);
+        $this->assertSame([], $config['ignore_exceptions']);
     }
 
     #[Env('SENTRY_DSN', 'http://example.com')]
@@ -103,5 +105,13 @@ final class ClientBootloaderTest extends TestCase
     {
         $options = $this->getContainer()->get(Options::class);
         $this->assertNull($options->getRelease());
+    }
+
+    public function testSetIgnoreExceptions(): void
+    {
+        $this->updateConfig('sentry.ignore_exceptions', [ClientException::class]);
+
+        $options = $this->getContainer()->get(Options::class);
+        $this->assertSame([ClientException::class], $options->getIgnoreExceptions());
     }
 }

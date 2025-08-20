@@ -20,6 +20,7 @@ final class SentryConfig extends InjectableConfig
         'sample_rate' => 1.0,
         'traces_sample_rate' => null,
         'send_default_pii' => false,
+        'ignore_exceptions' => [],
     ];
 
     /**
@@ -81,5 +82,19 @@ final class SentryConfig extends InjectableConfig
     public function isSendDefaultPii(): bool
     {
         return $this->config['send_default_pii'] ?? false;
+    }
+
+    /**
+     * A list of class names that matches exceptions that shouldn't be sent to Sentry. Checks whether the provided
+     * class name is of a given type or subtype.
+     *
+     * @return class-string<\Throwable>[]
+     * @see: https://docs.sentry.io/platforms/php/guides/laravel/configuration/options/#ignore_exceptions
+     */
+    public function getIgnoreExceptions(): array
+    {
+        /** @var class-string<\Throwable>[] $ignored */
+        $ignored = $this->config['ignore_exceptions'] ?? [];
+        return $ignored;
     }
 }
