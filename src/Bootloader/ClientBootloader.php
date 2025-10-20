@@ -64,6 +64,7 @@ class ClientBootloader extends Bootloader
                 : (float)$env->get('SENTRY_TRACES_SAMPLE_RATE'),
             'send_default_pii' => (bool)$env->get('SENTRY_SEND_DEFAULT_PII'),
             'ignore_exceptions' => [],
+            'before_send' => null,
         ]);
     }
 
@@ -101,6 +102,11 @@ class ClientBootloader extends Bootloader
 
         if ($config->getRelease() === null) {
             $options->setRelease($env->get('APP_VERSION'));
+        }
+
+        $beforeSendCallback = $config->getBeforeSendCallback();
+        if ($beforeSendCallback !== null) {
+            $options->setBeforeSendCallback($beforeSendCallback);
         }
 
         $options->setIntegrations(function (array $integrations) use ($options, $requestScope): array {

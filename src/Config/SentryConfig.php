@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Spiral\Sentry\Config;
 
+use Sentry\Event;
+use Sentry\EventHint;
 use Spiral\Core\InjectableConfig;
 
 /**
@@ -21,6 +23,7 @@ final class SentryConfig extends InjectableConfig
         'traces_sample_rate' => null,
         'send_default_pii' => false,
         'ignore_exceptions' => [],
+        'before_send' => null,
     ];
 
     /**
@@ -96,5 +99,19 @@ final class SentryConfig extends InjectableConfig
         /** @var class-string<\Throwable>[] $ignored */
         $ignored = $this->config['ignore_exceptions'] ?? [];
         return $ignored;
+    }
+
+    /**
+     * This function is called with an SDK-specific message or error event object, and can return a modified event object, or null to skip reporting the event. This can be used, for instance, for manual PII stripping before sending.
+     * By the time before_send is executed, all scope data has already been applied to the event. Further modification of the scope won't have any effect.
+     *
+     * @return callable(Event, ?EventHint): ?Event|null
+     * @see: https://docs.sentry.io/platforms/php/guides/laravel/configuration/options/#before_send
+     */
+    public function getBeforeSendCallback(): ?callable
+    {
+        /** @var callable(Event, ?EventHint): ?Event $beforeSend */
+        $beforeSend = is_callable($this->config['before_send']) ? $this->config['before_send'] : null;
+        return $beforeSend;
     }
 }
