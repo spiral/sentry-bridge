@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Spiral\Tests\Sentry;
 
 use PHPUnit\Framework\TestCase;
+use Sentry\Event;
+use Sentry\EventHint;
 use Spiral\Sentry\Config\SentryConfig;
 
 final class ConfigTest extends TestCase
@@ -58,5 +60,17 @@ final class ConfigTest extends TestCase
 
         $cfg = new SentryConfig(['send_default_pii' => true]);
         $this->assertTrue($cfg->isSendDefaultPii());
+    }
+
+    public function testBeforeSend(): void
+    {
+        $cfg = new SentryConfig();
+        $this->assertNull($cfg->getBeforeSendCallback());
+
+        $callback = static function (Event $event, ?EventHint $hint): ?Event {
+            return $event;
+        };
+        $cfg = new SentryConfig(['before_send' => $callback]);
+        $this->assertSame($callback, $cfg->getBeforeSendCallback());
     }
 }

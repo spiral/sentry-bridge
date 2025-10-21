@@ -4,10 +4,13 @@ namespace Spiral\Tests\Sentry;
 
 use Sentry\ClientInterface;
 use Sentry\Client;
+use Sentry\Event;
+use Sentry\EventHint;
 use Sentry\Integration\RequestFetcherInterface;
 use Sentry\Options;
 use Sentry\State\Hub;
 use Sentry\State\HubInterface;
+use Spiral\Config\Patch\Append;
 use Spiral\Http\Exception\ClientException;
 use Spiral\Sentry\Config\SentryConfig;
 use Spiral\Sentry\Http\RequestScope;
@@ -44,9 +47,10 @@ final class ClientBootloaderTest extends TestCase
         $this->assertNull($config['environment']);
         $this->assertNull($config['release']);
         $this->assertSame(1.0, $config['sample_rate']);
-        $this->assertSame(null, $config['traces_sample_rate']);
+        $this->assertNull($config['traces_sample_rate']);
         $this->assertFalse($config['send_default_pii']);
         $this->assertSame([], $config['ignore_exceptions']);
+        $this->assertNull($config['before_send']);
     }
 
     #[Env('SENTRY_DSN', 'http://example.com')]
@@ -113,5 +117,17 @@ final class ClientBootloaderTest extends TestCase
 
         $options = $this->getContainer()->get(Options::class);
         $this->assertSame([ClientException::class], $options->getIgnoreExceptions());
+    }
+
+    public function testSetBeforeSend(): void
+    {
+        $callback = static function (Event $event, ?EventHint $hint): ?Event {
+            return $event;
+        };
+
+        $this->updateConfig('sentry.before_send', $callback);
+
+        $options = $this->getContainer()->get(Options::class);
+        $this->assertSame($callback, $options->getBeforeSendCallback());
     }
 }
